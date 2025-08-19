@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -44,6 +46,7 @@ fun SignInScreen(
 ){
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     CollectOneTimeEvent(viewModel.event) {event->
         when(event){
@@ -74,6 +77,9 @@ fun SignInScreen(
                     uiState = uiState,
                     onAction = {
                         viewModel.onAction(it)
+                    },
+                    closeKeyboard = {
+                        keyboardController?.hide()
                     }
                 )
 
@@ -85,7 +91,8 @@ fun SignInScreen(
 @Composable
 fun SignInForm(
     uiState: SignInUiState,
-    onAction: (SignInUiAction) -> Unit
+    onAction: (SignInUiAction) -> Unit,
+    closeKeyboard: () -> Unit
 ){
     Column {
         OutlinedTextField(
@@ -132,10 +139,22 @@ fun SignInForm(
                 .padding(horizontal = 16.dp)
                 .size(50.dp),
             enabled = uiState.username.isNotBlank() && uiState.password.isNotBlank(),
-            onClick = { onAction(SignInUiAction.Submit) },
+            onClick = {
+                onAction(SignInUiAction.Submit)
+                closeKeyboard()
+            },
             shape = RoundedCornerShape(10.dp)
         ) {
-            Text(text = "Sign In")
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(28.dp),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    strokeWidth = 4.dp
+                )
+            } else{
+                Text(text = "Sign In")
+            }
+
         }
     }
 }
