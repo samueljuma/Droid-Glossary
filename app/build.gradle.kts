@@ -10,7 +10,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.phillqins.droidglossary"
+        applicationId = "com.phillqinshub.droidglossary"
         minSdk = 27
         targetSdk = 36
         versionCode = 1
