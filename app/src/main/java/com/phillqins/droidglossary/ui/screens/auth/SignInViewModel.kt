@@ -43,6 +43,8 @@ class SignInViewModel(
     private val _event = Channel<SignInUiEvent>()
     val event = _event.receiveAsFlow()
 
+    fun isUserLoggedIn() = repository.isUserLoggedIn()
+
     fun onAction(event: SignInUiAction) {
         when (event) {
             is SignInUiAction.UsernameChanged -> _uiState.update { it.copy(username = event.value) }
