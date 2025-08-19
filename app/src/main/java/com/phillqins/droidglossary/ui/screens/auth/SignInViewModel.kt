@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phillqins.droidglossary.data.models.UserCredentials
 import com.phillqins.droidglossary.data.network.NetworkResult
-import com.phillqins.droidglossary.data.repositories.DroidGlossaryRepository
+import com.phillqins.droidglossary.domain.AuthRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,7 +35,7 @@ sealed class SignInUiEvent{
 }
 
 class SignInViewModel(
-    private val repository: DroidGlossaryRepository
+    private val repository: AuthRepository
 ): ViewModel(){
     private val _uiState = MutableStateFlow(SignInUiState())
     val uiState: StateFlow<SignInUiState> = _uiState.asStateFlow()

@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phillqins.droidglossary.data.models.GlossaryItem
 import com.phillqins.droidglossary.data.network.NetworkResult
-import com.phillqins.droidglossary.data.repositories.DroidGlossaryRepository
+import com.phillqins.droidglossary.domain.AuthRepository
+import com.phillqins.droidglossary.domain.GlossaryRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +32,8 @@ sealed interface HomeUIAction{
     object SignOut: HomeUIAction
 }
 class HomeViewModel(
-    private val repository: DroidGlossaryRepository
+    private val glossaryRepository: GlossaryRepository,
+    private val authRepository: AuthRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(HomeUIState())
     val uiState = _uiState.asStateFlow()
@@ -52,7 +54,7 @@ class HomeViewModel(
 
     fun signOut(){
         viewModelScope.launch {
-            repository.signOutUser()
+            authRepository.signOutUser()
             _event.send(HomeScreenEvent.NavigateToSignIn)
         }
     }
@@ -68,7 +70,7 @@ class HomeViewModel(
         }
 
         viewModelScope.launch {
-            val result = repository.fetchGlossaryItems()
+            val result = glossaryRepository.fetchGlossaryItems()
             when(result){
                 is NetworkResult.Error -> {
                     _uiState.update {
@@ -99,6 +101,5 @@ class HomeViewModel(
             _event.send(HomeScreenEvent.ShowToast(message))
         }
     }
-
 
 }

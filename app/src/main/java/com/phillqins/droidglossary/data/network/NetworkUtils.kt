@@ -31,3 +31,10 @@ suspend fun <T> safeApiCall(
         }
     }
 }
+
+interface Error
+
+data class NetworkError(
+    val message: String
+) : Error
+
