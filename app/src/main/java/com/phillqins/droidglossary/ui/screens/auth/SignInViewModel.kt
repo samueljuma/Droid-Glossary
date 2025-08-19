@@ -2,11 +2,13 @@ package com.phillqins.droidglossary.ui.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -14,8 +16,8 @@ class SignInViewModel(): ViewModel(){
     private val _uiState = MutableStateFlow(SignInUiState())
     val uiState: StateFlow<SignInUiState> = _uiState.asStateFlow()
 
-    private val _event = MutableSharedFlow<SignInUiEvent>()
-    val event = _event.asSharedFlow()
+    private val _event = Channel<SignInUiEvent>()
+    val event = _event.receiveAsFlow()
 
     fun onAction(event: SignInUiAction) {
         when (event) {
@@ -33,7 +35,7 @@ class SignInViewModel(): ViewModel(){
 
     fun showToast(message: String) {
         viewModelScope.launch {
-            _event.emit(SignInUiEvent.ShowToast(message))
+            _event.send(SignInUiEvent.ShowToast(message))
         }
     }
 }
