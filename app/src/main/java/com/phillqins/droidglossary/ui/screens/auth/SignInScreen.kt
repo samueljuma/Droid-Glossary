@@ -51,12 +51,13 @@ fun SignInScreen(
     CollectOneTimeEvent(viewModel.event) {event->
         when(event){
             is SignInUiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+            SignInUiEvent.CloseKeyBoard -> keyboardController?.hide()
             SignInUiEvent.NavigateToHome -> {}
         }
     }
 
     Scaffold(
-        content = {innerPadding ->
+        content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -77,9 +78,6 @@ fun SignInScreen(
                     uiState = uiState,
                     onAction = {
                         viewModel.onAction(it)
-                    },
-                    closeKeyboard = {
-                        keyboardController?.hide()
                     }
                 )
 
@@ -91,8 +89,7 @@ fun SignInScreen(
 @Composable
 fun SignInForm(
     uiState: SignInUiState,
-    onAction: (SignInUiAction) -> Unit,
-    closeKeyboard: () -> Unit
+    onAction: (SignInUiAction) -> Unit
 ){
     Column {
         OutlinedTextField(
@@ -139,10 +136,7 @@ fun SignInForm(
                 .padding(horizontal = 16.dp)
                 .size(50.dp),
             enabled = uiState.username.isNotBlank() && uiState.password.isNotBlank(),
-            onClick = {
-                onAction(SignInUiAction.Submit)
-                closeKeyboard()
-            },
+            onClick = { onAction(SignInUiAction.Submit) },
             shape = RoundedCornerShape(10.dp)
         ) {
             if (uiState.isLoading) {

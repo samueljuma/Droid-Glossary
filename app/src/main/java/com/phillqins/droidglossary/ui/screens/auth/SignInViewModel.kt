@@ -31,6 +31,7 @@ sealed interface SignInUiAction {
 sealed class SignInUiEvent{
     data class ShowToast(val message: String): SignInUiEvent()
     object NavigateToHome: SignInUiEvent()
+    object CloseKeyBoard: SignInUiEvent()
 }
 
 class SignInViewModel(
@@ -53,6 +54,7 @@ class SignInViewModel(
 
 
     private fun signIn() {
+        closeKeyboard() // Trigger close keyboard event
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             val userCredentials = UserCredentials(
@@ -77,6 +79,12 @@ class SignInViewModel(
     fun showToast(message: String) {
         viewModelScope.launch {
             _event.send(SignInUiEvent.ShowToast(message))
+        }
+    }
+
+    private fun closeKeyboard() {
+        viewModelScope.launch {
+            _event.send(SignInUiEvent.CloseKeyBoard)
         }
     }
 }
