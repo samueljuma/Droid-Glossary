@@ -56,7 +56,11 @@ fun SignInScreen(
             is SignInUiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
             SignInUiEvent.CloseKeyBoard -> keyboardController?.hide()
             SignInUiEvent.NavigateToHome -> {
-                navController.navigate(AppScreens.Home.route)
+                navController.navigate(AppScreens.Home.route){
+                    popUpTo(AppScreens.SignIn.route){
+                        inclusive = true
+                    }
+                }
             }
         }
     }

@@ -34,11 +34,16 @@ class DroidGlossaryRepository(
             val response = apiService.fetchGlossaryItems()
             when(response.status){
                 HttpStatusCode.OK -> { NetworkResult.Success(response.body()) }
+                HttpStatusCode.Unauthorized -> NetworkResult.Error("Unauthorized")
                 else -> NetworkResult.Error("Bad Request")
             }
         }
     }
 
     fun isUserLoggedIn() = sessionManager.isUserLoggedIn()
+
+    fun signOutUser(){
+        sessionManager.clearSessionDetails()
+    }
 
 }
