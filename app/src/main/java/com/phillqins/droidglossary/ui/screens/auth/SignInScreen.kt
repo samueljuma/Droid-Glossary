@@ -36,13 +36,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.phillqins.droidglossary.R
+import com.phillqins.droidglossary.ui.navigation.AppScreens
 import com.phillqins.droidglossary.utils.CollectOneTimeEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    viewModel: SignInViewModel
+    viewModel: SignInViewModel,
+    navController: NavController
 ){
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -52,7 +55,9 @@ fun SignInScreen(
         when(event){
             is SignInUiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
             SignInUiEvent.CloseKeyBoard -> keyboardController?.hide()
-            SignInUiEvent.NavigateToHome -> {}
+            SignInUiEvent.NavigateToHome -> {
+                navController.navigate(AppScreens.Home.route)
+            }
         }
     }
 

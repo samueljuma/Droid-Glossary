@@ -2,6 +2,7 @@ package com.phillqins.droidglossary.data.network
 
 import com.phillqins.droidglossary.data.models.UserCredentials
 import io.ktor.client.HttpClient
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -18,5 +19,9 @@ class APIService(
             setBody(userCredentials)
             contentType(ContentType.Application.Json)
         }
+    }
+
+    suspend fun fetchGlossaryItems(): HttpResponse{
+        return client.get("glossary")
     }
 }
